@@ -91,6 +91,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+
+import android.content.res.Resources;
 /**
  * Manages instances of {@link WebView}
  * <p>
@@ -719,7 +721,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
           mVideoView = view;
           mCustomViewCallback = callback;
 
-          mReactContext.getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+          mReactContext.getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mVideoView.setSystemUiVisibility(FULLSCREEN_SYSTEM_UI_VISIBILITY);
@@ -748,11 +750,19 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
 
           mWebView.setVisibility(View.VISIBLE);
 
+    
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             mReactContext.getCurrentActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
           }
-          mReactContext.getCurrentActivity().setRequestedOrientation(initialRequestedOrientation);
-
+          
+          Resources res = mReactContext.getCurrentActivity().getResources();
+          boolean tabletSize = res.getBoolean(R.bool.isTablet);
+          if (tabletSize) {
+            mReactContext.getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+          } else {
+            mReactContext.getCurrentActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+          }
+          
           mReactContext.removeLifecycleEventListener(this);
         }
       };
