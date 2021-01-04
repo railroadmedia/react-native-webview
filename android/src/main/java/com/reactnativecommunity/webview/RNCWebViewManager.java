@@ -13,6 +13,7 @@ import android.net.http.SslError;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -189,6 +190,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     settings.setBuiltInZoomControls(true);
     settings.setDisplayZoomControls(false);
     settings.setDomStorageEnabled(true);
+    settings.setSupportMultipleWindows(true);
 
     settings.setAllowFileAccess(false);
     settings.setAllowContentAccess(false);
@@ -252,6 +254,11 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
   @ReactProp(name = "javaScriptEnabled")
   public void setJavaScriptEnabled(WebView view, boolean enabled) {
     view.getSettings().setJavaScriptEnabled(enabled);
+  }
+
+  @ReactProp(name = "setSupportMultipleWindows")
+  public void setSupportMultipleWindows(WebView view, boolean enabled){
+    view.getSettings().setSupportMultipleWindows(enabled);
   }
 
   @ReactProp(name = "showsHorizontalScrollIndicator")
@@ -885,7 +892,7 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
         // This is desired behavior. We later use these values to determine whether the request is a top-level navigation or a subresource request.
         String topWindowUrl = webView.getUrl();
         String failingUrl = error.getUrl();
-        
+
         // Cancel request after obtaining top-level URL.
         // If request is cancelled before obtaining top-level URL, undesired behavior may occur.
         // Undesired behavior: Return value of WebView.getUrl() may be the current URL instead of the failing URL.
@@ -1081,6 +1088,17 @@ public class RNCWebViewManager extends SimpleViewManager<WebView> {
     public RNCWebChromeClient(ReactContext reactContext, WebView webView) {
       this.mReactContext = reactContext;
       this.mWebView = webView;
+    }
+
+    @Override
+    public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
+
+      final WebView newWebView = new WebView(view.getContext());
+      final WebView.WebViewTransport transport = (WebView.WebViewTransport) resultMsg.obj;
+      transport.setWebView(newWebView);
+      resultMsg.sendToTarget();
+
+      return true;
     }
 
     @Override
