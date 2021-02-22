@@ -1146,6 +1146,16 @@ static NSDictionary* customCertificatesForHost;
   [_webView goBack];
 }
 
+- (void)disableIdleTimer
+{
+  [UIApplication sharedApplication].idleTimerDisabled = YES;
+}
+
+- (void)enableIdleTimer
+{
+  [UIApplication sharedApplication].idleTimerDisabled = NO;
+}
+
 - (void)reload
 {
   /**

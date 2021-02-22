@@ -98,6 +98,26 @@ class WebView extends React.Component<IOSWebViewProps, State> {
       undefined,
     );
   };
+  /**
+   * Disable idle timer.
+   */
+  disableIdleTimer = () => {
+    UIManager.dispatchViewManagerCommand(
+      this.getWebViewHandle(),
+      this.getCommands().disableIdleTimer,
+      undefined
+    );
+  };
+  /**
+   * Enable idle timer.
+   */
+  enableIdleTimer = () => {
+    UIManager.dispatchViewManagerCommand(
+      this.getWebViewHandle(),
+      this.getCommands().enableIdleTimer,
+      undefined
+    );
+  };
 
   /**
    * Reloads the current page.

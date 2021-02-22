@@ -79,6 +79,8 @@
 - (void)injectJavaScript:(NSString *_Nullable)script;
 - (void)goForward;
 - (void)goBack;
+- (void)disableIdleTimer;
+- (void)enableIdleTimer;
 - (void)reload;
 - (void)stopLoading;
 #if !TARGET_OS_OSX
