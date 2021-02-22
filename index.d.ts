@@ -13,6 +13,16 @@ declare class WebView<P = {}> extends Component<WebViewProps & P> {
     goBack: () => void;
 
     /**
+     * Go back one page in the webview's history.
+     */
+    disableIdleTimer: () => void;
+
+    /**
+     * Go back one page in the webview's history.
+     */
+    enableIdleTimer: () => void;
+
+    /**
      * Go forward one page in the webview's history.
      */
     goForward: () => void;
